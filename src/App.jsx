@@ -1,53 +1,38 @@
-import { useEffect, useState } from 'react';
 import './App.css';
 import Sidebar from './Components/Sidebar';
 import Home from './Components/HomePage';
 import Project from './Components/Project';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import Login from './Components/Login';
+import Register from './Components/Register';
+import { BrowserRouter as Router, Route, Routes,Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import Cookies from 'js-cookie';
+import Page from './utils/userPage';
 
-function App() {
+
+
+function App() {;
+  const checkUsernameExists=()=> {
+    const username = Cookies.get('user');
+    return username !== null;
+  }
+  const shouldDisplaySidebar = () => {
+    return !['/login', '/register'].includes(location.pathname);
+  };
+
   return (
     <div className='App'>
       <Router>
-        <div className='container'> 
-          <Sidebar /> 
-          <div className='content'>
             <Routes>
-              <Route path='/home' element={<Home />} />
-              <Route path='/project/:projectId' element={<Project />} />
+            <Route path='/' element={checkUsernameExists() ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+              <Route path='/home' element={<Page  component={Home}/>} />
+              <Route path='/project/:projectId' element={<Page  component={Project}/>} />
+              <Route path='/login' element={<Login  />} />
+              <Route path='/register' element={<Register />} />
             </Routes>
-          </div>
-        </div>
       </Router>
-    </div>
+    </div> 
   );
 }
-
-// function ProjectContainer() {
-//   const [selectedProject, setSelectedProject] = useState(null); 
-//   const { projectId } = useParams();
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const url = "http://localhost:3000";
-//         const response = await fetch(url + "/project/getProj/" + projectId);
-//         const data = await response.json();
-//         console.log("Project data ");
-//         console.log(data);
-//         setSelectedProject(data);
-//       } catch (error) {
-//         console.error("Error fetching data:", error);
-//       }
-//     };
-//     fetchData();
-//   }, [projectId]); // Added projectId as dependency to useEffect
-
-//   return (
-//     <Project selectedProject={selectedProject} />
-//   );
-// }
 
 export default App;

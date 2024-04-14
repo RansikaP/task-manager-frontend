@@ -2,12 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Cookies from 'js-cookie';
 
 function Sidebar() {
   const [data, setData] = useState([]);
-
+  const user = Cookies.get("user");
+  console.log(user)
   useEffect(() => {
     const fetchData = async () => {
+      let ErrorDataset = []
       try {
         console.log("Sidebar");
         const dataset = [
@@ -23,7 +26,7 @@ function Sidebar() {
         ];
 
         const url = "http://localhost:3000";
-        const response1 = await fetch(url + "/project/myProjects/Rans");
+        const response1 = await fetch(url + "/project/myProjects/"+user);
         let data1 = await response1.json();
 
         data1 = data1.map((item) => {
@@ -32,7 +35,7 @@ function Sidebar() {
             isMyProject: true,
           };
         });
-        const response2 = await fetch(url + "/project/collabProjects/Rans");
+        const response2 = await fetch(url + "/project/collabProjects/"+user);
         let data2 = await response2.json();
 
         data2 = data2.map((item) => {
@@ -49,11 +52,28 @@ function Sidebar() {
             isLabel: true,
           })
           .concat(data2);
-        console.log(newDataset);
         setData(newDataset);
+
       } catch (error) {
         console.error("Error fetching data:", error);
+        ErrorDataset = [
+          {
+            name: "Homepage",
+            isHomePage: true,
+            _id:'/home'
+          },
+          {
+            name: "My Projects",
+            isLabel: true,
+          },
+          {
+            name: "Collab Projects",
+            isLabel: true,
+          },
+        ];
+        setData(ErrorDataset);
       }
+      
     };
     fetchData();
   }, []);
@@ -64,6 +84,8 @@ function Sidebar() {
     // onProjectSelect(project._id)
   };
 
+  console.log('siderbar here')
+  console.log(Sidebardata)
   return (
     <div className="Sidebar">
       <ul className="SidebarList">

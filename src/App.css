@@ -40,7 +40,9 @@ body{
 
 }
 .Label {
-  color: grey; /* Text color for labels */
+  color: rgb(207, 99, 207); 
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .HomePageButton{
