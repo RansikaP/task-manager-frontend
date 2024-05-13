@@ -1,42 +1,58 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.App{
+  width: 100vw;
+  height: 100vh;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.container{
+  display: flex;
+  height: 100vh;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+body{
+  margin:0;
+  padding:0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.Sidebar{
+  height: 100%;
+  width:250px;
+  background-color: #2f4050;
 }
 
-.card {
-  padding: 2em;
+.SidebarList{
+  height:100%;
+  width:100%;
+  padding: 0;
 }
 
-.read-the-docs {
-  color: #888;
+.SidebarList.row{
+  width: 100%;
+  height:50px;
+  border: 1px solid black;
+  list-style-type: none;
+  margin:0%;
+  display: flex;
+  flex-direction: row;
+  color:white;
+  justify-content: center;
+  align-items: center;
+
+}
+.Label {
+  color: rgb(207, 99, 207); 
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.HomePageButton{
+    color:white
+}
+
+.MyProject {
+  color: aqua; /* Text color for "My Projects" */
+}
+
+.CollabProject {
+  color: rgb(184, 247, 184); /* Text color for "Collab Projects" */
 }
