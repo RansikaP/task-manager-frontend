@@ -9,8 +9,6 @@ import React, { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
 import Page from './utils/userPage';
 
-
-
 function App() {;
   const checkUsernameExists=()=> {
     const username = Cookies.get('user');
