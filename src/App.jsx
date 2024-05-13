@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Route, Routes,Navigate } from 'react-router-do
 import React, { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
 import Page from './utils/userPage';
-
+import './index.css';
 
 
 function App() {;
