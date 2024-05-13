@@ -6,16 +6,20 @@ import Login from './Components/Login';
 import Register from './Components/Register';
 import { BrowserRouter as Router, Route, Routes,Navigate } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
-import Cookies from 'js-cookie';
+import Cookies from "universal-cookie"
 import Page from './utils/userPage';
 import './index.css';
 
 
-function App() {;
-  const checkUsernameExists=()=> {
-    const username = Cookies.get('user');
-    return username !== null;
+function App() {
+  const checkUserExists=()=> {
+    const cookies = new Cookies()
+    if (cookies.get("user") !== null && cookies.get("jwt_authorization") !== null) {
+      return true
+    }
+    return false
   }
+
   const shouldDisplaySidebar = () => {
     return !['/login', '/register'].includes(location.pathname);
   };
@@ -24,7 +28,7 @@ function App() {;
     <div className='App'>
       <Router>
             <Routes>
-            <Route path='/' element={checkUsernameExists() ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+            <Route path='/' element={checkUserExists() ? <Navigate to="/home" /> : <Navigate to="/login" />} />
               <Route path='/home' element={<Page  component={Home}/>} />
               <Route path='/project/:projectId' element={<Page  component={Project}/>} />
               <Route path='/login' element={<Login  />} />

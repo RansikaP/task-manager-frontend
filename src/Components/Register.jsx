@@ -7,6 +7,6 @@ function Register () {
       <button>Login</button>
     </div>
   )
-};
+}
 
 export default Register;

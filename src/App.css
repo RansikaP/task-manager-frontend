@@ -1,4 +1,4 @@
-.App{
+/* .App{
   width: 100vw;
   height: 100vh;
 }
@@ -7,7 +7,6 @@
   display: flex;
   height: 100vh;
 }
-
 
 body{
   margin:0;
@@ -50,9 +49,34 @@ body{
 }
 
 .MyProject {
-  color: aqua; /* Text color for "My Projects" */
+  color: aqua; 
 }
 
 .CollabProject {
-  color: rgb(184, 247, 184); /* Text color for "Collab Projects" */
+  color: rgb(184, 247, 184);
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {    
+    font-family: "Poppins", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-something: grayscale;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('./assets/Mountains.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
