@@ -28,7 +28,7 @@ function App() {
     <div className='App'>
       <Router>
             <Routes>
-            <Route path='/' element={checkUserExists() ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+              <Route path='/' element={checkUserExists() ? <Navigate to="/home" /> : <Navigate to="/login" />} />
               <Route path='/home' element={<Page  component={Home}/>} />
               <Route path='/project/:projectId' element={<Page  component={Project}/>} />
               <Route path='/login' element={<Login  />} />
