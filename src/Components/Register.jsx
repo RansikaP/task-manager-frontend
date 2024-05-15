@@ -1,15 +1,3 @@
-// import React from "react"
-
-// function Register () {
-//   return (
-//     <div>
-//       <button>Register</button>
-//       <button>Login</button>
-//     </div>
-//   )
-// };
-
-// export default Register;
 import { useState } from 'react'
 import { FaUser, FaLock,FaAddressCard  } from "react-icons/fa"
 import { useNavigate } from 'react-router-dom';

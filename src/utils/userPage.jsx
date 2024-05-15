@@ -26,6 +26,6 @@ function Page (props) {
           </div>
         </div>
   )
-};
+}
 
 export default Page;

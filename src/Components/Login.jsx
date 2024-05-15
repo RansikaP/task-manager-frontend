@@ -1,23 +1,24 @@
 import '../styles/login.css'
 import { FaUser, FaLock } from "react-icons/fa"
 import loginService from '../services/login'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Cookies from "universal-cookie"
 import {jwtDecode} from "jwt-decode"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const cookies = new Cookies()
+    const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const navigateTo = useNavigate();
+
     const handleUsername = (event) => {    
         setUsername(event.target.value)
     }
-    
+
     const handlePassword = (event) => { 
         setPassword(event.target.value)
-    }
+    }    
 
     const loginEvent = (event) => {
         event.preventDefault()
@@ -25,7 +26,6 @@ const Login = () => {
             .login(username, password)
             .then(response => {
                 const jwt_token = jwtDecode(response.accessToken)
-                console.log(jwt_token)
                 cookies.set("jwt_authorization", jwt_token, {
                     expires: new Date(jwt_token.exp * 1000),
                     sameSite: 'None',
@@ -36,21 +36,19 @@ const Login = () => {
                     sameSite: 'None',
                     secure: true
                 })
+
+                if (cookies.get("user") !== null && cookies.get("jwt_authorization") !== null) {
+                    navigate("/home")
+                }
+            })
+            .catch(error => {
+                console.error(error)
             })
     }
 
-    const handleLoginClick = () => {
-      console.log('here')
-      Cookies.set('user', 'Rans', { expires: 7 });
-      navigateTo('/home');
-
-    };
-    const navigateRegisterPage = ()=>{
-      navigateTo('/register')
-      }
     return (
         <div className="wrapper">        
-            <form onSubmit={handleLoginClick}>
+            <form onSubmit={loginEvent}>
                 <h1>Login</h1>
                 <div className="input-box">
                     <input type="text" value={username} onChange={handleUsername} placeholder="Username" required/>
@@ -68,7 +66,7 @@ const Login = () => {
                 <button type="submit" className="btn">Login</button>
 
                 <div className="register-link">
-                    <p>Don&apos;t have an account? <a href="#" onClick={navigateRegisterPage}>Register</a></p>
+                    <p>Don&apos;t have an account? <a href="/register">Register</a></p>
                 </div>       
             </form>
         </div>
