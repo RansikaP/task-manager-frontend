@@ -1,7 +1,7 @@
 import '../styles/login.css'
 import { FaUser, FaLock } from "react-icons/fa"
 import loginService from '../services/login'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Cookies from "universal-cookie"
 import {jwtDecode} from "jwt-decode"
 import { useNavigate } from "react-router-dom";
@@ -11,11 +11,11 @@ const Login = () => {
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const navigateTo = useNavigate();
+
     const handleUsername = (event) => {    
         setUsername(event.target.value)
     }
-    
+
     const handlePassword = (event) => { 
         setPassword(event.target.value)
     }    
