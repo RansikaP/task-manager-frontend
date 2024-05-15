@@ -4,12 +4,13 @@ import loginService from '../services/login'
 import { useState } from 'react'
 import Cookies from "universal-cookie"
 import {jwtDecode} from "jwt-decode"
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const cookies = new Cookies()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-
+    const navigateTo = useNavigate();
     const handleUsername = (event) => {    
         setUsername(event.target.value)
     }
@@ -39,11 +40,14 @@ const Login = () => {
     }
 
     const handleLoginClick = () => {
-    
+      console.log('here')
       Cookies.set('user', 'Rans', { expires: 7 });
       navigateTo('/home');
-    };
 
+    };
+    const navigateRegisterPage = ()=>{
+      navigateTo('/register')
+      }
     return (
         <div className="wrapper">        
             <form onSubmit={handleLoginClick}>
@@ -64,7 +68,7 @@ const Login = () => {
                 <button type="submit" className="btn">Login</button>
 
                 <div className="register-link">
-                    <p>Don&apos;t have an account? <a href="#">Register</a></p>
+                    <p>Don&apos;t have an account? <a href="#" onClick={navigateRegisterPage}>Register</a></p>
                 </div>       
             </form>
         </div>
