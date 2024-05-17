@@ -12,7 +12,6 @@ function Sidebar() {
     const fetchData = async () => {
       let ErrorDataset = []
       try {
-        console.log("Sidebar");
         const dataset = [
           {
             name: "Homepage",
@@ -25,7 +24,10 @@ function Sidebar() {
           },
         ];
 
+
+
         const url = "http://localhost:3000";
+
         const response1 = await fetch(url + "/project/myProjects/"+user);
         let data1 = await response1.json();
 
