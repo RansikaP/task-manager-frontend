@@ -2,7 +2,7 @@ import React, { useState,useEffect } from "react";
 import Sidebar from "../Components/Sidebar";
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-
+import '../styles/userPage.css'
 
 function Page (props) {
     
@@ -17,7 +17,7 @@ function Page (props) {
       }, [])
 
   return (
-<div className='container'> 
+<div className='PageContainer'> 
             <Sidebar />   
 
           
