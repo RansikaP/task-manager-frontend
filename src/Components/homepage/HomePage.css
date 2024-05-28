@@ -3,6 +3,10 @@
     flex-direction: column;
     align-items: flex-start;  
 }
+
+.HomePagecontainer h1{
+  color:white;
+}
 .main-content {
   display: flex;
   width: 80%;
