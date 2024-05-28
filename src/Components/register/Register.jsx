@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaUser, FaLock, FaAddressCard } from 'react-icons/fa'
-import userService from '../services/user'
+import userService from '../../services/user'
 import Cookies from 'universal-cookie'
 import { jwtDecode } from 'jwt-decode'
 
@@ -26,30 +26,28 @@ const Register = () => {
 
     const registerEvent = () => {
         event.preventDefault()
-        userService
-            .register(username, password, name)
-            .then((response) => {
-                const jwt_token = jwtDecode(response.accessToken)
-                cookies.set('jwt_authorization', jwt_token, {
-                    expires: new Date(jwt_token.exp * 1000),
-                    sameSite: 'None',
-                    secure: true,
-                })
-                cookies.set('user', jwt_token.aud, {
-                    expires: new Date(jwt_token.exp * 1000),
-                    sameSite: 'None',
-                    secure: true,
-                })
-
-                if (
-                    cookies.get('user') !== null &&
-                    cookies.get('jwt_authorization') !== null
-                ) {
-                    navigate('/home')
-                }
+        userService.register(username, password, name).then((response) => {
+            const jwt_token = jwtDecode(response.accessToken)
+            cookies.set('jwt_authorization', jwt_token, {
+                expires: new Date(jwt_token.exp * 1000),
+                sameSite: 'None',
+                secure: true,
             })
+            cookies.set('user', jwt_token.aud, {
+                expires: new Date(jwt_token.exp * 1000),
+                sameSite: 'None',
+                secure: true,
+            })
+
+            if (
+                cookies.get('user') !== null &&
+                cookies.get('jwt_authorization') !== null
+            ) {
+                navigate('/home')
+            }
+        })
     }
-    
+
     return (
         <div className="wrapper">
             <form onSubmit={registerEvent}>
@@ -95,8 +93,7 @@ const Register = () => {
 
                 <div className="register-link">
                     <p>
-                        Already have an account?{' '}
-                        <a href="/login">Login</a>
+                        Already have an account? <a href="/login">Login</a>
                     </p>
                 </div>
             </form>

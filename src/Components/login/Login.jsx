@@ -1,6 +1,6 @@
-import '../styles/login.css'
+import './login.css'
 import { FaUser, FaLock } from 'react-icons/fa'
-import userService from '../services/user'
+import userService from '../../services/user'
 import { useState } from 'react'
 import Cookies from 'universal-cookie'
 import { jwtDecode } from 'jwt-decode'
