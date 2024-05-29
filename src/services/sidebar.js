@@ -15,4 +15,14 @@ const getMyProjects = async () => {
     }
 }
 
-export default { getMyProjects }
+const getCollabProjects = async () => {
+    const requestUrl = baseUrl + 'collabProjects/' + username
+    try {
+        const response = await axios.get(requestUrl)
+        return response.data
+    } catch (error) {
+        console.error('Error occurred during login:', error)
+    }
+}
+
+export default { getMyProjects, getCollabProjects }
