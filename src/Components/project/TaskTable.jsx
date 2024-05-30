@@ -1,9 +1,9 @@
-import React from 'react';
-import TaskRow from './TaskRow';
+import TaskRow from './TaskRow'
 import './tasktable.css'
 const TaskTable = ({ tasks, onDelete, onEdit }) => {
+    console.log('task table: ', tasks)
     return (
-        <table className='tasktable'>
+        <table className="tasktable">
             <thead>
                 <tr>
                     <th>Task Name</th>
@@ -17,11 +17,16 @@ const TaskTable = ({ tasks, onDelete, onEdit }) => {
             </thead>
             <tbody>
                 {tasks.map((task, index) => (
-                    <TaskRow key={index} task={task} onDelete={onDelete} onEdit={onEdit} />
+                    <TaskRow
+                        key={index}
+                        task={task}
+                        onDelete={onDelete}
+                        onEdit={onEdit}
+                    />
                 ))}
             </tbody>
         </table>
-    );
-};
+    )
+}
 
-export default TaskTable;
+export default TaskTable
