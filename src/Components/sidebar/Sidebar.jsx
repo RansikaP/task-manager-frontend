@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import sidebarService from '../../services/sidebar'
+import sidebarService from '../../services/project'
 
 const Sidebar = () => {
     const [data, setData] = useState([])
