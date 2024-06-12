@@ -6,6 +6,8 @@ const getProjectTasks = async (projectId) => {
     const tasksObject = Object.keys(tasksJson).map((i) => tasksJson[i])
 
     const formattedTasks = tasksObject.map((task) => ({
+        id: task._id,
+        projectId: task.projectId,
         name: task.title,
         description: task.description,
         creator: task.assignee,
@@ -13,7 +15,6 @@ const getProjectTasks = async (projectId) => {
         dueDate: moment(task.dueDate).utc().format('YYYY-MM-DD'),
         status: task.status,
     }))
-    console.log('array: ', formattedTasks)
     return formattedTasks
 }
 
