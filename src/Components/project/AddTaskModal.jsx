@@ -1,36 +1,84 @@
-import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
-import Select from 'react-select';
+import React, { useState } from 'react'
+import { Modal, Button, Form } from 'react-bootstrap'
+import Select from 'react-select'
+import taskService from '../../services/task'
+import Cookies from 'universal-cookie'
 
-const AddTaskModal = ({ show, handleClose, handleSave, users }) => {
+const AddTaskModal = ({ show, handleClose, handleSave, users, projectId }) => {
+    const cookies = new Cookies()
+
     const [newTask, setNewTask] = useState({
         name: '',
         description: '',
-        creator: 'Current User',  // Adjust as needed to get the current user
+        creator: 'Current User', // Adjust as needed to get the current user
         assignedUsers: [],
         dueDate: '',
         status: 'Not Started',
-    });
+    })
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setNewTask({ ...newTask, [name]: value });
-    };
+        const { name, value } = e.target
+        setNewTask({ ...newTask, [name]: value })
+    }
 
     const handleUserChange = (selectedOptions) => {
-        const selectedUsers = selectedOptions ? selectedOptions.map(option => option.value) : [];
-        setNewTask({ ...newTask, assignedUsers: selectedUsers });
-    };
+        const selectedUsers = selectedOptions
+            ? selectedOptions.map((option) => option.value)
+            : []
+        setNewTask({ ...newTask, assignedUsers: selectedUsers })
+    }
 
     const handleSubmit = () => {
-        handleSave(newTask);
-        handleClose();
-    };
+        const formattedNewTask = {
+            projectId: projectId,
+            title: newTask.name,
+            description: newTask.description,
+            assignee: cookies.get('user'),
+            assignedTo: newTask.assignedUsers,
+            dueDate: newTask.dueDate,
+            status: newTask.status,
+        }
 
-    const userOptions = users.map(user => ({ value: user, label: user }));
+        taskService
+            .addTask(formattedNewTask)
+            .then((response) => {
+                const createdTask = response.data
+                const updatedTask = {
+                    ...newTask,
+                    id: createdTask._id,
+                    projectId: projectId,
+                }
+
+                if (response.status === 201) {
+                    handleSave(updatedTask)
+                } else {
+                    console.error(
+                        `Failed to delete task. Status code: ${response.status}`
+                    )
+                }
+
+                setNewTask({
+                    name: '',
+                    description: '',
+                    creator: 'Current User', // Adjust as needed to get the current user
+                    assignedUsers: [],
+                    dueDate: '',
+                    status: 'Not Started',
+                })
+                handleClose()
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+    }
+
+    const userOptions = users.map((user) => ({ value: user, label: user }))
 
     return (
-        <Modal show={show} onHide={handleClose}>
+        <Modal
+            show={show}
+            onHide={handleClose}
+        >
             <Modal.Header closeButton>
                 <Modal.Title>Add New Task</Modal.Title>
             </Modal.Header>
@@ -59,7 +107,9 @@ const AddTaskModal = ({ show, handleClose, handleSave, users }) => {
                         <Select
                             isMulti
                             name="assignedUsers"
-                            value={userOptions.filter(option => newTask.assignedUsers.includes(option.value))}
+                            value={userOptions.filter((option) =>
+                                newTask.assignedUsers.includes(option.value)
+                            )}
                             onChange={handleUserChange}
                             options={userOptions}
                         />
@@ -90,15 +140,21 @@ const AddTaskModal = ({ show, handleClose, handleSave, users }) => {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
+                <Button
+                    variant="secondary"
+                    onClick={handleClose}
+                >
                     Close
                 </Button>
-                <Button variant="primary" onClick={handleSubmit}>
+                <Button
+                    variant="primary"
+                    onClick={handleSubmit}
+                >
                     Add Task
                 </Button>
             </Modal.Footer>
         </Modal>
-    );
-};
+    )
+}
 
-export default AddTaskModal;
+export default AddTaskModal

@@ -19,11 +19,40 @@ const getProjectTasks = async (projectId) => {
     const request = baseUrl + 'getProjectTasks/' + projectId
     try {
         const response = await axios.get(request)
-        console.log('response: ', response.data)
         return response.data
     } catch (error) {
         console.log('Error occured while retreving tasks:', error)
     }
 }
 
-export default { getMyTasks, getProjectTasks }
+const updateTask = async (id, task) => {
+    const request = baseUrl + id
+    try {
+        const response = await axios.put(request, task)
+        return response
+    } catch (error) {
+        console.log('Error occured while updating task: ', error)
+    }
+}
+
+const deleteTask = async (id) => {
+    const request = baseUrl + id
+    try {
+        const response = await axios.delete(request)
+        return response
+    } catch (error) {
+        console.log('Error occured while deleting task: ', error)
+    }
+}
+
+const addTask = async (task) => {
+    const request = baseUrl
+    try {
+        const response = await axios.post(request, task)
+        return response
+    } catch (error) {
+        console.log('Error occured while creating task: ', error)
+    }
+}
+
+export default { getMyTasks, getProjectTasks, updateTask, deleteTask, addTask }

@@ -1,7 +1,6 @@
 import TaskRow from './TaskRow'
 import './tasktable.css'
 const TaskTable = ({ tasks, onDelete, onEdit }) => {
-    console.log('task table: ', tasks)
     return (
         <table className="tasktable">
             <thead>
