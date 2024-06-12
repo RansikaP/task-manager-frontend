@@ -13,43 +13,16 @@ function Project() {
     const [selectedProject, setSelectedProject] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [selectedTask, setSelectedTask] = useState(null)
-    const [tasks, setTasks] = useState([
-        {
-            name: 'Design Homepage',
-            description: 'Create a new design for the homepage',
-            creator: 'Akash',
-            assignedUsers: ['Alice', 'Bob'],
-            dueDate: '2023-05-30',
-            status: 'In Progress',
-        },
-        {
-            name: 'Fix Bug #123',
-            description: 'Resolve the issue with login',
-            creator: 'Akash',
-            assignedUsers: ['Charlie'],
-            dueDate: '2023-05-25',
-            status: 'Completed',
-        },
-        {
-            name: 'Write Documentation',
-            description: 'Document the new API endpoints',
-            creator: 'Akash',
-            assignedUsers: ['Diana'],
-            dueDate: '2023-06-10',
-            status: 'Not Started',
-        },
-        {
-            name: 'Code Review',
-            description: 'Review code for the new feature',
-            creator: 'Akash',
-            assignedUsers: ['Alice', 'Charlie'],
-            dueDate: '2023-05-28',
-            status: 'In Review',
-        },
-    ])
+    const [tasks, setTasks] = useState([])
     const { projectId } = useParams()
     const navigateTo = useNavigate()
-    const [users] = useState(['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'])
+    const [users, setUsers] = useState([
+        'Alice',
+        'Bob',
+        'Charlie',
+        'Diana',
+        'Eve',
+    ])
     const [showAddModal, setShowAddModal] = useState(false)
     const [currentUser, setCurrentUser] = useState()
 
@@ -152,6 +125,7 @@ function Project() {
                         handleClose={handleCloseAdd}
                         handleSave={handleAdd}
                         users={users}
+                        projectId={projectId}
                     />
                 </div>
             ) : (
