@@ -28,7 +28,6 @@ function App() {
 
     return (
         <div className="App">
-            <Router>
                 <Routes>
                     <Route
                         path="/"
@@ -57,7 +56,6 @@ function App() {
                         element={<Register />}
                     />
                 </Routes>
-            </Router>
         </div>
     )
 }
