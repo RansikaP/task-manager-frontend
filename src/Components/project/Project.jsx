@@ -6,10 +6,12 @@ import TaskTable from './TaskTable'
 import EditTaskModal from './EditTaskModal'
 import AddTaskModal from './AddTaskModal'
 import Cookies from 'js-cookie'
-import { Button } from 'react-bootstrap'
 import tasksDataGetter from './tasks'
+import { Button } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import projectService from '../../services/project'
 
-function Project() {
+function Project(props) {
     const [selectedProject, setSelectedProject] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [selectedTask, setSelectedTask] = useState(null)
@@ -26,6 +28,10 @@ function Project() {
     const [showAddModal, setShowAddModal] = useState(false)
     const [currentUser, setCurrentUser] = useState()
 
+    const { reloadSidebar } = props
+
+    const [isCreator, setIsCreator] = useState(false)
+
     useEffect(() => {
         const user = Cookies.get('user')
         setCurrentUser(user)
@@ -41,6 +47,21 @@ function Project() {
                         setSelectedProject(data)
                     } else {
                         navigateTo('/home')
+                    }
+
+                    //if user goes to page after deleting or leaving the project
+                    if (
+                        data[0].creator != user &&
+                        !data[0].collaborators.includes(user)
+                    ) {
+                        navigateTo('/home')
+                    }
+
+                    //sets page functions specific for project owners
+                    if (data[0].creator == user) {
+                        setIsCreator(true)
+                    } else {
+                        setIsCreator(false)
                     }
                 } else {
                     console.error(
@@ -93,6 +114,21 @@ function Project() {
         setShowAddModal(false)
     }
 
+    const DeleteProject = async () => {
+        // console.log(selectedProject[0]._id)
+        await projectService.deleteProject(selectedProject[0]._id)
+        reloadSidebar()
+        navigateTo('/home')
+    }
+
+    const LeaveProject = async () => {
+        console.log(currentUser)
+        console.log(selectedProject[0]._id)
+        await projectService.leaveProject(currentUser, selectedProject[0]._id)
+        reloadSidebar()
+        navigateTo('/home')
+    }
+
     return (
         <div>
             {selectedProject ? (
@@ -100,12 +136,31 @@ function Project() {
                     <h1 className="ProjectNameLabel">
                         {selectedProject[0].name}
                     </h1>
-                    <Button
-                        variant="primary"
-                        onClick={() => setShowAddModal(true)}
-                    >
-                        Add Task
-                    </Button>
+
+                    <div className="d-flex justify-content-between">
+                        <Button
+                            variant="primary"
+                            onClick={() => setShowAddModal(true)}
+                        >
+                            Add Task
+                        </Button>
+                        {isCreator && (
+                            <Button
+                                variant="danger"
+                                onClick={DeleteProject}
+                            >
+                                Delete Project
+                            </Button>
+                        )}
+                        {!isCreator && (
+                            <Button
+                                variant="danger"
+                                onClick={LeaveProject}
+                            >
+                                Leave Project
+                            </Button>
+                        )}
+                    </div>
                     <TaskTable
                         tasks={tasks}
                         onDelete={handleDelete}
