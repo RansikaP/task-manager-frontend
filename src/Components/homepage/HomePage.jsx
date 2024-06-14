@@ -3,7 +3,6 @@ import './HomePage.css'
 import Cookies from 'universal-cookie'
 import fetchTasks from './Data'
 import projectService from '../../services/project'
-import userService from '../../services/user'
 import { useNavigate } from 'react-router-dom'
 
 function Home(props) {
@@ -19,6 +18,8 @@ function Home(props) {
 
     const cookies = new Cookies()
     const username = cookies.get('user name')
+
+    const navigateTo = useNavigate()
 
     useEffect(() => {
         const getData = async () => {
