@@ -11,13 +11,15 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import projectService from '../../services/project'
 import userService from '../../services/user'
 import { Button } from 'react-bootstrap'
+import RemoveCollaboratorModal from './RemoveCollabModal'
+import encryptionService from '../../services/encryption'
 
 function Project(props) {
     const [selectedProject, setSelectedProject] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [selectedTask, setSelectedTask] = useState(null)
     const [tasks, setTasks] = useState([])
-    const { projectId } = useParams()
+    let { projectId } = useParams()
     const navigateTo = useNavigate()
     const [collaborators, setcollaborators] = useState([
         'Alice',
@@ -28,6 +30,10 @@ function Project(props) {
     ])
     const [showAddModal, setShowAddModal] = useState(false)
     const [currentUser, setCurrentUser] = useState()
+
+    projectId = encryptionService.decryptMessage(projectId)
+
+    const [showRemoveModal, setShowRemoveModal] = useState(false)
 
     const { reloadSidebar } = props
 
@@ -42,6 +48,7 @@ function Project(props) {
                 const response = await fetch(
                     `${url}/project/getProj/${projectId}`
                 )
+
                 if (response.ok) {
                     const data = await response.json()
                     if (data.length > 0) {
@@ -49,7 +56,6 @@ function Project(props) {
                     } else {
                         navigateTo('/home')
                     }
-
                     //if user goes to page after deleting or leaving the project
                     if (
                         data[0].creator != user &&
@@ -127,8 +133,11 @@ function Project(props) {
         setShowAddModal(false)
     }
 
+    const handleCloseRemove = () => {
+        setShowRemoveModal(false)
+    }
+
     const DeleteProject = async () => {
-        // console.log(selectedProject[0]._id)
         await projectService.deleteProject(selectedProject[0]._id)
         reloadSidebar()
         navigateTo('/home')
@@ -157,6 +166,15 @@ function Project(props) {
                         >
                             Add Task
                         </Button>
+                        {isCreator && (
+                            <Button
+                                className="btn btn-warning"
+                                onClick={() => setShowRemoveModal(true)}
+                            >
+                                Remove Collaborators
+                            </Button>
+                        )}
+
                         {isCreator && (
                             <Button
                                 variant="danger"
@@ -195,6 +213,12 @@ function Project(props) {
                         users={collaborators}
                         projectId={projectId}
                     />
+                    {/* <RemoveCollaboratorModal
+            show={showAddModal}
+            handleRemove={handleRemove}
+            handleCloseRemove={handleCloseRemove}
+            users={users}
+          /> */}
                 </div>
             ) : (
                 <p>Loading project data...</p>

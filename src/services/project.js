@@ -30,6 +30,9 @@ const getCollabProjects = async () => {
 
 const deleteProject = async(projId)=>{
     const requestUrl = baseUrl+'delete/'+ projId
+    console.log(requestUrl)
+    console.log(projId)
+    console.log('here')
     try {
         const response = await axios.delete(requestUrl)
     } catch (error) {

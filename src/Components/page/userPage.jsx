@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import './userPage.css'
 import Home from '../homepage/HomePage'
-
+import { useParams } from "react-router-dom";
 function Page(props) {
     const Component = props.component
     const user = Cookies.get('user')
