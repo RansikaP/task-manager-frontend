@@ -37,6 +37,20 @@ const Login = () => {
                     secure: true,
                 })
 
+                userService
+                    .getUserInfo(cookies.get('user'))
+                    .then((response) => {
+                        console.log(response.name)
+                        cookies.set('user name', response.name, {
+                            expires: new Date(jwt_token.exp * 1000),
+                            sameSite: 'None',
+                            secure: true,
+                        })
+                    })
+                    .catch((error) => {
+                        console.error(error)
+                    })
+
                 if (
                     cookies.get('user') !== null &&
                     cookies.get('jwt_authorization') !== null

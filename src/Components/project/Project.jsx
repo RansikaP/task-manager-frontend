@@ -8,6 +8,9 @@ import AddTaskModal from './AddTaskModal'
 import Cookies from 'js-cookie'
 import { Button } from 'react-bootstrap'
 import tasksDataGetter from './tasks'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import projectService from '../../services/project'
+import userService from '../../services/user'
 
 function Project() {
     const [selectedProject, setSelectedProject] = useState(null)
@@ -16,7 +19,7 @@ function Project() {
     const [tasks, setTasks] = useState([])
     const { projectId } = useParams()
     const navigateTo = useNavigate()
-    const [users, setUsers] = useState([
+    const [collaborators, setcollaborators] = useState([
         'Alice',
         'Bob',
         'Charlie',
@@ -42,6 +45,33 @@ function Project() {
                     } else {
                         navigateTo('/home')
                     }
+
+                    //if user goes to page after deleting or leaving the project
+                    if (
+                        data[0].creator != user &&
+                        !data[0].collaborators.includes(user)
+                    ) {
+                        navigateTo('/home')
+                    }
+
+                    //sets page functions specific for project owners
+                    if (data[0].creator == user) {
+                        setIsCreator(true)
+                    } else {
+                        setIsCreator(false)
+                    }
+
+                    setcollaborators(
+                        await Promise.all(
+                            data[0].collaborators.map((user) =>
+                                userService
+                                    .getUserInfo(user)
+                                    .then((response) => {
+                                        return response.name
+                                    })
+                            )
+                        )
+                    )
                 } else {
                     console.error(
                         'Error fetching project data:',
@@ -117,14 +147,14 @@ function Project() {
                             handleClose={handleClose}
                             task={selectedTask}
                             handleSave={handleSave}
-                            users={users}
+                            users={collaborators}
                         />
                     )}
                     <AddTaskModal
                         show={showAddModal}
                         handleClose={handleCloseAdd}
                         handleSave={handleAdd}
-                        users={users}
+                        users={collaborators}
                         projectId={projectId}
                     />
                 </div>

@@ -3,6 +3,8 @@ import './HomePage.css'
 import Cookies from 'universal-cookie'
 import fetchTasks from './Data'
 import projectService from '../../services/project'
+import userService from '../../services/user'
+import { useNavigate } from 'react-router-dom'
 
 function Home(props) {
     const { reloadSidebar } = props
@@ -16,7 +18,7 @@ function Home(props) {
     const [upcomingTasks, setUpcomingTasks] = useState([])
 
     const cookies = new Cookies()
-    const username = cookies.get('user')
+    const username = cookies.get('user name')
 
     useEffect(() => {
         const getData = async () => {
@@ -58,6 +60,18 @@ function Home(props) {
         console.log('Form submission:', { projectName, projectCreator })
     }
 
+    const Logout = () => {
+        cookies.remove('user')
+        cookies.remove('jwt_authorization')
+        setProjectName('')
+        setProjectCreator('')
+        setProjectTitle('')
+        setProjectDescription('')
+        setUrgentTasks([])
+        setUpcomingTasks([])
+        navigateTo('/login')
+    }
+
     return (
         <div className="HomePagecontainer">
             <h1>Welcome {username}</h1>
@@ -93,6 +107,12 @@ function Home(props) {
                 </div>
             </div>
             <div className="formscontainer">
+                <button
+                    className="btn btn-danger btn-lg mb-2 p-0 m-0 fw-bold"
+                    onClick={() => Logout()}
+                >
+                    Logout
+                </button>
                 <div className="form-box">
                     <form onSubmit={handleProjectSubmit}>
                         <label>Create A New Project</label>

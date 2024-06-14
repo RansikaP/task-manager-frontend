@@ -1,10 +1,10 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3000/'
+const baseUrl = 'http://localhost:3000/user/'
 
 const login = async (email, password) => {
-    const requestUrl = baseUrl + 'user/login'
-    const requestData = {email, password}
+    const requestUrl = baseUrl + 'login'
+    const requestData = { email, password }
     try {
         const response = await axios.post(requestUrl, requestData)
         return response.data
@@ -14,8 +14,8 @@ const login = async (email, password) => {
 }
 
 const register = async (email, password, name) => {
-    const requestUrl = baseUrl + 'user/register'
-    const requestData = {email, password, name}
+    const requestUrl = baseUrl + 'register'
+    const requestData = { email, password, name }
     try {
         const reponse = await axios.post(requestUrl, requestData)
         return reponse.data
@@ -24,4 +24,15 @@ const register = async (email, password, name) => {
     }
 }
 
-export default { login, register }
+const getUserInfo = async (userId) => {
+    const requestUrl = baseUrl + userId
+
+    try {
+        const response = await axios.get(requestUrl)
+        return response.data
+    } catch (error) {
+        console.error('Error occured getting user informations')
+    }
+}
+
+export default { login, register, getUserInfo }
