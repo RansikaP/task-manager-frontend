@@ -76,48 +76,50 @@ function Project(props) {
         } else {
           console.error("Error fetching project data:", response.statusText);
           navigateTo("/home");
+                }
+            } catch (error) {
+                console.error('Error fetching project data:', error)
+                navigateTo('/home')
+            }
         }
-      } catch (error) {
-        console.error("Error fetching project data:", error);
-        navigateTo("/home");
-      }
-    };
 
-    const fetchTasks = async () => {
-      const tasksData = await tasksDataGetter.getProjectTasks(projectId);
-      setTasks(tasksData);
-    };
+        const fetchTasks = async () => {
+            const tasksData = await tasksDataGetter.getProjectTasks(projectId)
+            setTasks(tasksData)
+        }
 
-    fetchData();
-    fetchTasks();
-  }, [projectId, navigateTo]);
+        fetchData()
+        fetchTasks()
+    }, [projectId, navigateTo])
 
-  const handleDelete = (task) => {
-    setTasks(tasks.filter((t) => t !== task));
-  };
+    const handleDelete = (task) => {
+        setTasks(tasks.filter((t) => t !== task))
+    }
 
-  const handleEdit = (task) => {
-    setSelectedTask(task);
-    setShowModal(true);
-  };
+    const handleEdit = (task) => {
+        setSelectedTask(task)
+        setShowModal(true)
+    }
 
-  const handleSave = (editedTask) => {
-    setTasks(tasks.map((t) => (t.name === editedTask.name ? editedTask : t)));
-  };
+    const handleSave = (editedTask) => {
+        setTasks(
+            tasks.map((t) => (t.name === editedTask.name ? editedTask : t))
+        )
+    }
 
-  const handleClose = () => {
-    setShowModal(false);
-    setSelectedTask(null);
-  };
+    const handleClose = () => {
+        setShowModal(false)
+        setSelectedTask(null)
+    }
 
-  const handleAdd = (newTask) => {
-    const taskWithCreator = { ...newTask, creator: currentUser };
-    setTasks([...tasks, taskWithCreator]);
-  };
+    const handleAdd = (newTask) => {
+        const taskWithCreator = { ...newTask, creator: currentUser }
+        setTasks([...tasks, taskWithCreator])
+    }
 
-  const handleCloseAdd = () => {
-    setShowAddModal(false);
-  };
+    const handleCloseAdd = () => {
+        setShowAddModal(false)
+    }
 
   const handleRemove = () => {
     console.log("here");
@@ -130,7 +132,6 @@ function Project(props) {
 
 
   const DeleteProject = async () => {
-    // console.log(selectedProject[0]._id)
     await projectService.deleteProject(selectedProject[0]._id);
     reloadSidebar();
     navigateTo("/home");
@@ -201,12 +202,12 @@ function Project(props) {
             handleCloseRemove={handleCloseRemove}
             users={users}
           /> */}
+                          </div>
+            ) : (
+                <p>Loading project data...</p>
+            )}
         </div>
-      ) : (
-        <p>Loading project data...</p>
-      )}
-    </div>
-  );
+    )
 }
 
-export default Project;
+export default Project
