@@ -1,20 +1,32 @@
-import React, { useState } from 'react'
-import { Modal, Button, Form } from 'react-bootstrap'
-import Select from 'react-select'
-import taskService from '../../services/task'
-import Cookies from 'universal-cookie'
+import React, { useState } from 'react';
+import { Modal, Button, Form } from 'react-bootstrap';
+import Select from 'react-select';
 
-const RemoveTaskModal = ({ show, handleRemove,handleRemoveClose,users }) => {
+const RemoveTaskModal = ({ show, handleRemove, handleRemoveClose, users = [] }) => {
+    const [selectedUsers, setSelectedUsers] = useState([]);
 
-    const [selectedUsers,setSelectedUsers] = useState();
+    const handleUserChange = (selectedOptions) => {
+        const selectedUsers = selectedOptions
+            ? selectedOptions.map((option) => option.value)
+            : [];
+        setSelectedUsers(selectedUsers);
+    };
 
+    const handleRemoveClick = () => {
+        handleRemove(selectedUsers);
+        handleRemoveClose();
+    };
 
-
+    // Ensure users is an array
+    const userOptions = users.map((user) => ({
+        value: user._id,
+        label: `${user.name} (${user.email})`
+    }));
 
     return (
         <Modal
             show={show}
-            onHide={handleClose}
+            onHide={handleRemoveClose}
         >
             <Modal.Header closeButton>
                 <Modal.Title>Remove Collaborators</Modal.Title>
@@ -26,9 +38,6 @@ const RemoveTaskModal = ({ show, handleRemove,handleRemoveClose,users }) => {
                         <Select
                             isMulti
                             name="assignedUsers"
-                            value={userOptions.filter((option) =>
-                                newTask.assignedUsers.includes(option.value)
-                            )}
                             onChange={handleUserChange}
                             options={userOptions}
                         />
@@ -44,13 +53,13 @@ const RemoveTaskModal = ({ show, handleRemove,handleRemoveClose,users }) => {
                 </Button>
                 <Button
                     variant="danger"
-                    onClick={handleRemove}
+                    onClick={handleRemoveClick}
                 >
                     Remove Collaborators
                 </Button>
             </Modal.Footer>
         </Modal>
-    )
-}
+    );
+};
 
-export default RemoveTaskModal
+export default RemoveTaskModal;
