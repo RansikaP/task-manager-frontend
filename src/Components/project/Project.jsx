@@ -21,13 +21,7 @@ function Project(props) {
     const [tasks, setTasks] = useState([])
     let { projectId } = useParams()
     const navigateTo = useNavigate()
-    const [collaborators, setcollaborators] = useState([
-        'Alice',
-        'Bob',
-        'Charlie',
-        'Diana',
-        'Eve',
-    ])
+    const [collaborators, setCollaborators] = useState([])
     const [showAddModal, setShowAddModal] = useState(false)
     const [currentUser, setCurrentUser] = useState()
 
@@ -71,7 +65,7 @@ function Project(props) {
                         setIsCreator(false)
                     }
 
-                    setcollaborators(
+                    setCollaborators(
                         await Promise.all(
                             data[0].collaborators.map((user) =>
                                 userService
@@ -104,6 +98,11 @@ function Project(props) {
         fetchTasks()
     }, [projectId, navigateTo])
 
+    const updateCollaborators = async (collabIds) => {
+        const collabData = await userService.getCollabUsers(collabIds)
+        setCollaborators(collabData)
+    }
+
     const handleDelete = (task) => {
         setTasks(tasks.filter((t) => t !== task))
     }
@@ -133,7 +132,16 @@ function Project(props) {
         setShowAddModal(false)
     }
 
-    const handleCloseRemove = () => {
+    const handleRemove = async (selectedUsers) => {
+        const updatedProject = await projectService.removeCollaborators(
+            projectId,
+            selectedUsers
+        )
+        setSelectedProject(updatedProject)
+        updateCollaborators(updatedProject.collaborators)
+    }
+
+    const handleRemoveClose = () => {
         setShowRemoveModal(false)
     }
 
@@ -213,12 +221,12 @@ function Project(props) {
                         users={collaborators}
                         projectId={projectId}
                     />
-                    {/* <RemoveCollaboratorModal
-            show={showAddModal}
-            handleRemove={handleRemove}
-            handleCloseRemove={handleCloseRemove}
-            users={users}
-          /> */}
+                    <RemoveCollaboratorModal
+                        show={showAddModal}
+                        handleRemove={handleRemove}
+                        handleCloseRemove={handleRemoveClose}
+                        users={collaborators}
+                    />
                 </div>
             ) : (
                 <p>Loading project data...</p>
