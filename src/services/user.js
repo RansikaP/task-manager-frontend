@@ -36,7 +36,7 @@ const getUserInfo = async (userId) => {
 }
 
 const getCollabUsers = async (collabs) => {
-    let requestUrl = baseUrl + 'user/'
+    let requestUrl = baseUrl
 
     if (!Array.isArray(collabs)) {
         console.error('collabs should be an array')
