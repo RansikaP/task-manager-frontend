@@ -142,6 +142,7 @@ function Project(props) {
     }
 
     const handleRemoveClose = () => {
+        console.log('closing remove modal')
         setShowRemoveModal(false)
     }
 
@@ -222,7 +223,7 @@ function Project(props) {
                         projectId={projectId}
                     />
                     <RemoveCollaboratorModal
-                        show={showAddModal}
+                        show={showRemoveModal}
                         handleRemove={handleRemove}
                         handleCloseRemove={handleRemoveClose}
                         users={collaborators}
