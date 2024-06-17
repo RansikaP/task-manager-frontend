@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Cookies from 'universal-cookie'
-import toast from "react-hot-toast";
+import toast from 'react-hot-toast'
 
 const baseUrl = 'http://localhost:3000/project/'
 const cookies = new Cookies()
@@ -28,8 +28,8 @@ const getCollabProjects = async () => {
     }
 }
 
-const deleteProject = async(projId)=>{
-    const requestUrl = baseUrl+'delete/'+ projId
+const deleteProject = async (projId) => {
+    const requestUrl = baseUrl + 'delete/' + projId
     console.log(requestUrl)
     console.log(projId)
     console.log('here')
@@ -38,24 +38,20 @@ const deleteProject = async(projId)=>{
     } catch (error) {
         console.error('Error occurred:', error)
     }
-
 }
 
-const leaveProject = async(collab, projId)=>{
-    const requestUrl = baseUrl+"removeCollaborator";
+const leaveProject = async (collab, projId) => {
+    const requestUrl = baseUrl + 'removeCollaborator'
     const removeCollabObj = {
-       id: projId,
-       collaborator: collab
-    }    
+        id: projId,
+        collaborator: collab,
+    }
     try {
         const response = await axios.put(requestUrl, removeCollabObj)
-    
     } catch (error) {
         console.error('Error occurred:', error)
     }
-
 }
-
 
 const createProject = async (title, desc) => {
     const username = cookies.get('user')
@@ -71,17 +67,35 @@ const createProject = async (title, desc) => {
     } catch (error) {
         console.error('Error occurred during project creation:', error)
         if (error.response && error.response.status === 404) {
-            toast.error("Create A Project With A UNIQUE Name");
+            toast.error('Create A Project With A UNIQUE Name')
         }
     }
 }
 
+const addCollaborator = async (creator, name, key) => {
+    const collaborator = cookies.get('user')
+    const requestUrl = baseUrl + 'addCollaborator'
 
-const removeCollaborators =  async(projectId,collaborators)=>{
-    const requestUrl = baseUrl +'removeCollaborator'
+    const requestBody = {
+        creator: creator,
+        name: name,
+        key: key,
+        collaborator: collaborator,
+    }
+
+    try {
+        const response = await axios.put(requestUrl, requestBody)
+        return response.data
+    } catch (error) {
+        console.error('Error occurred while adding user to project:', error)
+    }
+}
+
+const removeCollaborators = async (projectId, collaborators) => {
+    const requestUrl = baseUrl + 'removeCollaborator'
     const removeCollabObj = {
         id: projectId,
-        collaborators: collaborators
+        collaborators: collaborators,
     }
 
     console.log(removeCollabObj)
@@ -94,4 +108,12 @@ const removeCollaborators =  async(projectId,collaborators)=>{
     }
 }
 
-export default { getMyProjects, getCollabProjects, createProject ,deleteProject,leaveProject,removeCollaborators}
+export default {
+    getMyProjects,
+    getCollabProjects,
+    createProject,
+    deleteProject,
+    leaveProject,
+    addCollaborator,
+    removeCollaborators,
+}

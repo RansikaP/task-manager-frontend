@@ -5,11 +5,11 @@ import fetchTasks from './Data'
 import projectService from '../../services/project'
 import { useNavigate } from 'react-router-dom'
 
-
 function Home(props) {
     const { reloadSidebar } = props
     const [projectName, setProjectName] = useState('')
     const [projectCreator, setProjectCreator] = useState('')
+    const [projectKey, setProjectKey] = useState('')
 
     const [projectTitle, setProjectTitle] = useState('')
     const [projectDescription, setProjectDescription] = useState('')
@@ -18,12 +18,11 @@ function Home(props) {
     const [upcomingTasks, setUpcomingTasks] = useState([])
 
     const cookies = new Cookies()
-    const username = cookies.get('user')
+    const username = cookies.get('user name')
 
     const navigateTo = useNavigate()
 
     useEffect(() => {
-
         const getData = async () => {
             const upcomingData = await fetchTasks.upcomingTasks()
             const urgentData = await fetchTasks.urgentTasks()
@@ -35,6 +34,10 @@ function Home(props) {
 
     const handleName = (event) => {
         setProjectName(event.target.value)
+    }
+
+    const handleKey = (event) => {
+        setProjectKey(event.target.value)
     }
 
     const handleCreator = (event) => {
@@ -60,19 +63,32 @@ function Home(props) {
 
     const handleJoinSubmit = (event) => {
         event.preventDefault()
-        console.log('Form submission:', { projectName, projectCreator })
+        console.log('Form submission:', {
+            projectName,
+            projectCreator,
+            projectKey,
+        })
+
+        projectService
+            .addCollaborator(projectCreator, projectName, projectKey)
+            .then((response) => {
+                setProjectCreator('')
+                setProjectKey('')
+                setProjectName('')
+                reloadSidebar()
+            })
     }
 
-    const Logout=()=>{
-        cookies.remove('user');
-        cookies.remove('jwt_authorization');
-   setProjectName('');
-    setProjectCreator('');
-    setProjectTitle('');
-    setProjectDescription('');
-    setUrgentTasks([]);
-    setUpcomingTasks([]);
-    navigateTo('/login');
+    const Logout = () => {
+        cookies.remove('user')
+        cookies.remove('jwt_authorization')
+        setProjectName('')
+        setProjectCreator('')
+        setProjectTitle('')
+        setProjectDescription('')
+        setUrgentTasks([])
+        setUpcomingTasks([])
+        navigateTo('/login')
     }
 
     return (
@@ -110,7 +126,12 @@ function Home(props) {
                 </div>
             </div>
             <div className="formscontainer">
-            <button className="btn btn-danger btn-lg mb-2 p-0 m-0 fw-bold" onClick={() => Logout()}>Logout</button>
+                <button
+                    className="btn btn-danger btn-lg mb-2 p-0 m-0 fw-bold"
+                    onClick={() => Logout()}
+                >
+                    Logout
+                </button>
                 <div className="form-box">
                     <form onSubmit={handleProjectSubmit}>
                         <label>Create A New Project</label>
@@ -153,6 +174,14 @@ function Home(props) {
                                 type="text"
                                 value={projectName}
                                 onChange={handleName}
+                            />
+                        </label>
+                        <label>
+                            Project Key:
+                            <input
+                                type="password"
+                                value={projectKey}
+                                onChange={handleKey}
                             />
                         </label>
                         <input
