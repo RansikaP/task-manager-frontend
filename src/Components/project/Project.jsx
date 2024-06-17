@@ -6,7 +6,7 @@ import TaskTable from "./TaskTable";
 
 import EditTaskModal from "./EditTaskModal";
 import AddTaskModal from "./AddTaskModal";
-import RemoveCollaboratorModal from './RemoveCollabModal';
+import RemoveCollaboratorModal from "./RemoveCollabModal";
 
 import Cookies from "js-cookie";
 import tasksDataGetter from "./tasks";
@@ -14,8 +14,7 @@ import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import projectService from "../../services/project";
 import encryptionService from "../../services/encryption";
-
-
+import userService from "../../services/user";
 
 
 
@@ -43,6 +42,7 @@ function Project(props) {
   const { reloadSidebar } = props;
 
   const [isCreator, setIsCreator] = useState(false);
+  const [projectCollaborators, setProjectCollaborators] = useState();
 
   useEffect(() => {
     const user = Cookies.get("user");
@@ -55,7 +55,7 @@ function Project(props) {
         if (response.ok) {
           const data = await response.json();
           if (data.length > 0) {
-            setSelectedProject(data);
+            setSelectedProject(data[0]);
           } else {
             navigateTo("/home");
           }
@@ -73,74 +73,87 @@ function Project(props) {
           } else {
             setIsCreator(false);
           }
+          const collabIds = data[0].collaborators
+
+          const collabData = await userService.getCollabUsers(collabIds);
+          setProjectCollaborators(collabData)
+
+        
         } else {
           console.error("Error fetching project data:", response.statusText);
           navigateTo("/home");
-                }
-            } catch (error) {
-                console.error('Error fetching project data:', error)
-                navigateTo('/home')
-            }
         }
+      } catch (error) {
+        console.error("Error fetching project data:", error);
+        navigateTo("/home");
+      }
+    };
 
-        const fetchTasks = async () => {
-            const tasksData = await tasksDataGetter.getProjectTasks(projectId)
-            setTasks(tasksData)
-        }
+    const fetchTasks = async () => {
+      const tasksData = await tasksDataGetter.getProjectTasks(projectId);
+      setTasks(tasksData);
+    };
 
-        fetchData()
-        fetchTasks()
-    }, [projectId, navigateTo])
 
-    const handleDelete = (task) => {
-        setTasks(tasks.filter((t) => t !== task))
-    }
 
-    const handleEdit = (task) => {
-        setSelectedTask(task)
-        setShowModal(true)
-    }
+    fetchData();
+    fetchTasks();
+  }, [projectId, navigateTo]);
 
-    const handleSave = (editedTask) => {
-        setTasks(
-            tasks.map((t) => (t.name === editedTask.name ? editedTask : t))
-        )
-    }
+const updateCollaborators = async(collabIds)=>{
+  const collabData = await userService.getCollabUsers(collabIds);
+  setProjectCollaborators(collabData)
+}
 
-    const handleClose = () => {
-        setShowModal(false)
-        setSelectedTask(null)
-    }
 
-    const handleAdd = (newTask) => {
-        const taskWithCreator = { ...newTask, creator: currentUser }
-        setTasks([...tasks, taskWithCreator])
-    }
 
-    const handleCloseAdd = () => {
-        setShowAddModal(false)
-    }
-
-  const handleRemove = () => {
-    console.log("here");
+  const handleDelete = (task) => {
+    setTasks(tasks.filter((t) => t !== task));
   };
 
+  const handleEdit = (task) => {
+    setSelectedTask(task);
+    setShowModal(true);
+  };
 
-  const handleCloseRemove = () => {
+  const handleSave = (editedTask) => {
+    setTasks(tasks.map((t) => (t.name === editedTask.name ? editedTask : t)));
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+    setSelectedTask(null);
+  };
+
+  const handleAdd = (newTask) => {
+    const taskWithCreator = { ...newTask, creator: currentUser };
+    setTasks([...tasks, taskWithCreator]);
+  };
+
+  const handleCloseAdd = () => {
+    setShowAddModal(false);
+  };
+
+  const handleRemove = async(selectedUsers) => {
+    const updatedProject = await projectService.removeCollaborators(projectId,selectedUsers);
+    setSelectedProject(updatedProject)
+    updateCollaborators(updatedProject.collaborators)
+  };
+
+  const handleRemoveClose = () => {
     setShowRemoveModal(false);
   };
 
-
   const DeleteProject = async () => {
-    await projectService.deleteProject(selectedProject[0]._id);
+    await projectService.deleteProject(selectedProject._id);
     reloadSidebar();
     navigateTo("/home");
   };
 
   const LeaveProject = async () => {
     console.log(currentUser);
-    console.log(selectedProject[0]._id);
-    await projectService.leaveProject(currentUser, selectedProject[0]._id);
+    console.log(selectedProject._id);
+    await projectService.leaveProject(currentUser, selectedProject._id);
     reloadSidebar();
     navigateTo("/home");
   };
@@ -149,7 +162,7 @@ function Project(props) {
     <div>
       {selectedProject ? (
         <div>
-          <h1 className="ProjectNameLabel">{selectedProject[0].name}</h1>
+          <h1 className="ProjectNameLabel">{selectedProject.name}</h1>
 
           <div className="d-flex justify-content-between">
             <Button variant="primary" onClick={() => setShowAddModal(true)}>
@@ -158,7 +171,7 @@ function Project(props) {
             {isCreator && (
               <Button
                 className="btn btn-warning"
-                onClick={() => setRemoveModal(true)}
+                onClick={() => setShowRemoveModal(true)}
               >
                 Remove Collaborators
               </Button>
@@ -196,18 +209,18 @@ function Project(props) {
             users={users}
             projectId={projectId}
           />
-          {/* <RemoveCollaboratorModal
-            show={showAddModal}
+          <RemoveCollaboratorModal
+            show={showRemoveModal}
             handleRemove={handleRemove}
-            handleCloseRemove={handleCloseRemove}
-            users={users}
-          /> */}
-                          </div>
-            ) : (
-                <p>Loading project data...</p>
-            )}
+            handleRemoveClose={handleRemoveClose}
+            users={projectCollaborators}
+          />
         </div>
-    )
+      ) : (
+        <p>Loading project data...</p>
+      )}
+    </div>
+  );
 }
 
-export default Project
+export default Project;
