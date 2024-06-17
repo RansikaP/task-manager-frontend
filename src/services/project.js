@@ -61,7 +61,6 @@ const createProject = async (title, desc) => {
         creator: username,
         description: desc,
     }
-    console.log(username)
     try {
         const response = await axios.post(requestUrl, newProjectObj)
         return response.data
@@ -92,6 +91,23 @@ const addCollaborator = async (creator, name, key) => {
     }
 }
 
+const removeCollaborators = async (projectId, collaborators) => {
+    const requestUrl = baseUrl + 'removeCollaborator'
+    const removeCollabObj = {
+        id: projectId,
+        collaborators: collaborators,
+    }
+
+    console.log(removeCollabObj)
+
+    try {
+        const response = await axios.put(requestUrl, removeCollabObj)
+        return response.data
+    } catch (error) {
+        console.error('Error occurred during collaborator removal:', error)
+    }
+}
+
 export default {
     getMyProjects,
     getCollabProjects,
@@ -99,4 +115,5 @@ export default {
     deleteProject,
     leaveProject,
     addCollaborator,
+    removeCollaborators,
 }

@@ -35,4 +35,26 @@ const getUserInfo = async (userId) => {
     }
 }
 
-export default { login, register, getUserInfo }
+const getCollabUsers = async (collabs) => {
+    let requestUrl = baseUrl + 'user/'
+
+    if (!Array.isArray(collabs)) {
+        console.error('collabs should be an array')
+        return []
+    }
+
+    try {
+        const userPromises = collabs.map((id) =>
+            axios.get(`${requestUrl}${id}`).then((response) => response.data)
+        )
+
+        const users = await Promise.all(userPromises)
+        console.log(users)
+        return users
+    } catch (error) {
+        console.error('Error fetching users:', error)
+        return []
+    }
+}
+
+export default { login, register, getUserInfo, getCollabUsers }
