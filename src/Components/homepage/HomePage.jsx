@@ -9,6 +9,7 @@ function Home(props) {
     const { reloadSidebar } = props
     const [projectName, setProjectName] = useState('')
     const [projectCreator, setProjectCreator] = useState('')
+    const [projectKey, setProjectKey] = useState('')
 
     const [projectTitle, setProjectTitle] = useState('')
     const [projectDescription, setProjectDescription] = useState('')
@@ -35,6 +36,10 @@ function Home(props) {
         setProjectName(event.target.value)
     }
 
+    const handleKey = (event) => {
+        setProjectKey(event.target.value)
+    }
+
     const handleCreator = (event) => {
         setProjectCreator(event.target.value)
     }
@@ -58,7 +63,20 @@ function Home(props) {
 
     const handleJoinSubmit = (event) => {
         event.preventDefault()
-        console.log('Form submission:', { projectName, projectCreator })
+        console.log('Form submission:', {
+            projectName,
+            projectCreator,
+            projectKey,
+        })
+
+        projectService
+            .addCollaborator(projectCreator, projectName, projectKey)
+            .then((response) => {
+                setProjectCreator('')
+                setProjectKey('')
+                setProjectName('')
+                reloadSidebar()
+            })
     }
 
     const Logout = () => {
@@ -156,6 +174,14 @@ function Home(props) {
                                 type="text"
                                 value={projectName}
                                 onChange={handleName}
+                            />
+                        </label>
+                        <label>
+                            Project Key:
+                            <input
+                                type="password"
+                                value={projectKey}
+                                onChange={handleKey}
                             />
                         </label>
                         <input
