@@ -49,7 +49,6 @@ const getCollabUsers = async (collabs) => {
         )
 
         const users = await Promise.all(userPromises)
-        console.log(users)
         return users
     } catch (error) {
         console.error('Error fetching users:', error)
