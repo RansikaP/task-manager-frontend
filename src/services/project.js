@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Cookies from 'universal-cookie'
 import toast from 'react-hot-toast'
+import taskService from './task'
 
 const baseUrl = 'http://localhost:3000/project/'
 const cookies = new Cookies()
@@ -30,10 +31,13 @@ const getCollabProjects = async () => {
 
 const deleteProject = async (projId) => {
     const requestUrl = baseUrl + 'delete/' + projId
-    console.log(requestUrl)
-    console.log(projId)
-    console.log('here')
+
     try {
+        const taskIds = await taskService.getProjectTasks(projId)
+
+        taskIds.forEach((task) => {
+            taskService.deleteTask(task._id)
+        })
         const response = await axios.delete(requestUrl)
     } catch (error) {
         console.error('Error occurred:', error)
