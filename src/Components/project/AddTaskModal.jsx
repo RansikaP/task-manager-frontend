@@ -4,7 +4,7 @@ import Select from 'react-select'
 import taskService from '../../services/task'
 import Cookies from 'universal-cookie'
 
-const AddTaskModal = ({ show, handleClose, handleSave, users, projectId }) => {
+const AddTaskModal = ({ show, handleClose, handleSave, users=[], projectId }) => {
     const cookies = new Cookies()
 
     const [newTask, setNewTask] = useState({
@@ -72,8 +72,12 @@ const AddTaskModal = ({ show, handleClose, handleSave, users, projectId }) => {
             })
     }
 
-    const userOptions = users.map((user) => ({ value: user, label: user }))
-
+ 
+    // const userOptions = users.map((user) => ({ value: user, label: user }))
+    const userOptions = users.map((user) => ({
+        value: user._id,
+        label: `${user.name} (${user.email})`
+    }));
     return (
         <Modal
             show={show}

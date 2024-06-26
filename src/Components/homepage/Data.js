@@ -1,14 +1,28 @@
 import taskService from '../../services/task'
 import moment from 'moment'
-
+import projectService from "../../services/project";
 const urgentTasks = async () => {
     const tasksJson = await taskService.getMyTasks()
-    const tasksObject = Object.keys(tasksJson).map((i) => tasksJson[i])
+
+    const tasksJsonWithName  = await Promise.all(
+        tasksJson.map(async(task)=>{
+            const projectName = await projectService.getProjectName(task.projectId);
+            return {
+              ...task,
+              projectId: projectName
+            };
+          })
+        )
+
+    const tasksObject = Object.keys(tasksJsonWithName).map((i) => tasksJsonWithName[i])
+
+
+
 
     const filteredAndFormattedTasks = tasksObject
         .map((task) => ({
             name: task.title,
-            Project: 'project-name',
+            Project: task.projectId ,
             date: moment(task.dueDate).utc().format('YYYY-MM-DD'),
         }))
         .sort((a, b) => {
@@ -21,7 +35,17 @@ const urgentTasks = async () => {
 
 const upcomingTasks = async () => {
     const tasksJson = await taskService.getMyTasks()
-    const tasksObject = Object.keys(tasksJson).map((i) => tasksJson[i])
+    const tasksJsonWithName  = await Promise.all(
+        tasksJson.map(async(task)=>{
+            const projectName = await projectService.getProjectName(task.projectId);
+            return {
+              ...task,
+              projectId: projectName
+            };
+          })
+        )
+
+    const tasksObject = Object.keys(tasksJsonWithName).map((i) => tasksJsonWithName[i])
 
     const oneMonthFromNow = moment().add(1, 'week')
 
@@ -32,7 +56,7 @@ const upcomingTasks = async () => {
         })
         .map((task) => ({
             name: task.title,
-            Project: 'project-name',
+            Project: task.projectId,
             date: moment(task.dueDate).utc().format('YYYY-MM-DD'),
         }))
         .sort((a, b) => {

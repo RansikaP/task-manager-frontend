@@ -46,6 +46,15 @@
     margin-bottom: 8px;
   }
   
+  form input[type="password"] {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
+  
+
   form input[type="submit"] {
     display: block;
     width: 100%;
