@@ -18,9 +18,8 @@ const getMyProjects = async () => {
     }
 }
 
-
-const getProjectName = async (id)=>{
-    const requestUrl = baseUrl +'getProj/'+id
+const getProjectName = async (id) => {
+    const requestUrl = baseUrl + 'getProj/' + id
     try {
         const response = await axios.get(requestUrl)
         return response.data[0].name
@@ -28,7 +27,6 @@ const getProjectName = async (id)=>{
         console.error('Error occurred:', error)
     }
 }
-
 
 const getCollabProjects = async () => {
     const username = cookies.get('user')
@@ -64,7 +62,6 @@ const leaveProject = async (collab, projId) => {
     }
     try {
         const response = await axios.put(requestUrl, removeCollabObj)
-        console.log(response)
     } catch (error) {
         console.error('Error occurred:', error)
     }
@@ -115,8 +112,6 @@ const removeCollaborators = async (projectId, collaborators) => {
         collaborators: collaborators,
     }
 
-    console.log(removeCollabObj)
-
     try {
         const response = await axios.put(requestUrl, removeCollabObj)
         return response.data
@@ -133,5 +128,5 @@ export default {
     leaveProject,
     addCollaborator,
     removeCollaborators,
-    getProjectName
+    getProjectName,
 }
