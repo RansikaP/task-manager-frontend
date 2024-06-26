@@ -5,7 +5,6 @@ import taskService from './task'
 
 const baseUrl = 'http://localhost:3000/project/'
 const cookies = new Cookies()
-// const username = cookies.get('user')
 
 const getMyProjects = async () => {
     const username = cookies.get('user')
