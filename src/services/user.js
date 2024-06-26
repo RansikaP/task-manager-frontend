@@ -3,7 +3,6 @@ import axios from 'axios'
 const baseUrl = import.meta.env.VITE_BACKEND_URL + 'user/'
 
 const login = async (email, password) => {
-    console.log(baseUrl)
     const requestUrl = baseUrl + 'login'
     const requestData = { email, password }
     try {
