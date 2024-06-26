@@ -3,7 +3,7 @@ import { Modal, Button, Form } from 'react-bootstrap'
 import Select from 'react-select'
 import taskService from '../../services/task'
 
-const EditTaskModal = ({ show, handleClose, task, handleSave, users }) => {
+const EditTaskModal = ({ show, handleClose, task, handleSave, users=[] }) => {
     const [editedTask, setEditedTask] = useState(task)
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const EditTaskModal = ({ show, handleClose, task, handleSave, users }) => {
 
     const handleSubmit = () => {
         const newTask = {
-            projectID: task.projectID,
+            projectID: task.projectId,
             title: editedTask.name,
             description: editedTask.description,
             assignee: task.assignee,
@@ -51,7 +51,10 @@ const EditTaskModal = ({ show, handleClose, task, handleSave, users }) => {
             })
     }
 
-    const userOptions = users.map((user) => ({ value: user, label: user }))
+    const userOptions = users.map((user) => ({
+        value: user._id,
+        label: `${user.name} (${user.email})`
+    }));
 
     return (
         <Modal

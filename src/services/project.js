@@ -18,6 +18,18 @@ const getMyProjects = async () => {
     }
 }
 
+
+const getProjectName = async (id)=>{
+    const requestUrl = baseUrl +'getProj/'+id
+    try {
+        const response = await axios.get(requestUrl)
+        return response.data[0].name
+    } catch (error) {
+        console.error('Error occurred:', error)
+    }
+}
+
+
 const getCollabProjects = async () => {
     const username = cookies.get('user')
     const requestUrl = baseUrl + 'collabProjects/' + username
@@ -48,10 +60,11 @@ const leaveProject = async (collab, projId) => {
     const requestUrl = baseUrl + 'removeCollaborator'
     const removeCollabObj = {
         id: projId,
-        collaborator: collab,
+        collab: collab,
     }
     try {
         const response = await axios.put(requestUrl, removeCollabObj)
+        console.log(response)
     } catch (error) {
         console.error('Error occurred:', error)
     }
@@ -96,7 +109,7 @@ const addCollaborator = async (creator, name, key) => {
 }
 
 const removeCollaborators = async (projectId, collaborators) => {
-    const requestUrl = baseUrl + 'removeCollaborator'
+    const requestUrl = baseUrl + 'removeCollaborators'
     const removeCollabObj = {
         id: projectId,
         collaborators: collaborators,
@@ -120,4 +133,5 @@ export default {
     leaveProject,
     addCollaborator,
     removeCollaborators,
+    getProjectName
 }
