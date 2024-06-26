@@ -3,9 +3,8 @@ import Cookies from 'universal-cookie'
 import toast from 'react-hot-toast'
 import taskService from './task'
 
-const baseUrl = 'http://localhost:3000/project/'
+const baseUrl = import.meta.env.VITE_BACKEND_URL + 'project/'
 const cookies = new Cookies()
-// const username = cookies.get('user')
 
 const getMyProjects = async () => {
     const username = cookies.get('user')

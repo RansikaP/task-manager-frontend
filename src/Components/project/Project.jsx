@@ -43,9 +43,9 @@ function Project(props) {
 
         const fetchData = async () => {
             try {
-                const url = 'http://localhost:3000'
+                const url = import.meta.env.VITE_BACKEND_URL
                 const response = await fetch(
-                    `${url}/project/getProj/${projectId}`
+                    `${url}project/getProj/${projectId}`
                 )
 
                 if (response.ok) {
