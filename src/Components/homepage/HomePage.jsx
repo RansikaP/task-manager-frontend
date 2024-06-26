@@ -58,16 +58,10 @@ function Home(props) {
         setProjectTitle('')
         setProjectDescription('')
         reloadSidebar()
-        console.log('Form submission:', { projectTitle, projectDescription })
     }
 
     const handleJoinSubmit = (event) => {
         event.preventDefault()
-        console.log('Form submission:', {
-            projectName,
-            projectCreator,
-            projectKey,
-        })
 
         projectService
             .addCollaborator(projectCreator, projectName, projectKey)
