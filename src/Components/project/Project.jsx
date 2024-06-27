@@ -16,8 +16,6 @@ import projectService from "../../services/project";
 import encryptionService from "../../services/encryption";
 import userService from "../../services/user";
 
-
-
 function Project(props) {
   const [selectedProject, setSelectedProject] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -73,12 +71,10 @@ function Project(props) {
           } else {
             setIsCreator(false);
           }
-          const collabIds = data[0].collaborators
+          const collabIds = data[0].collaborators;
 
           const collabData = await userService.getCollabUsers(collabIds);
-          setProjectCollaborators(collabData)
-
-        
+          setProjectCollaborators(collabData);
         } else {
           console.error("Error fetching project data:", response.statusText);
           navigateTo("/home");
@@ -94,18 +90,14 @@ function Project(props) {
       setTasks(tasksData);
     };
 
-
-
     fetchData();
     fetchTasks();
   }, [projectId, navigateTo]);
 
-const updateCollaborators = async(collabIds)=>{
-  const collabData = await userService.getCollabUsers(collabIds);
-  setProjectCollaborators(collabData)
-}
-
-
+  const updateCollaborators = async (collabIds) => {
+    const collabData = await userService.getCollabUsers(collabIds);
+    setProjectCollaborators(collabData);
+  };
 
   const handleDelete = (task) => {
     setTasks(tasks.filter((t) => t !== task));
@@ -134,10 +126,15 @@ const updateCollaborators = async(collabIds)=>{
     setShowAddModal(false);
   };
 
-  const handleRemove = async(selectedUsers) => {
-    const updatedProject = await projectService.removeCollaborators(projectId,selectedUsers);
-    setSelectedProject(updatedProject)
-    updateCollaborators(updatedProject.collaborators)
+  const handleRemove = async (selectedUsers) => {
+    if (selectedUsers.length > 0) {
+      const updatedProject = await projectService.removeCollaborators(
+        projectId,
+        selectedUsers
+      );
+      setSelectedProject(updatedProject);
+      updateCollaborators(updatedProject.collaborators);
+    }
   };
 
   const handleRemoveClose = () => {

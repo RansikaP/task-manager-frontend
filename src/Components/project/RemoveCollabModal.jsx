@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import Select from 'react-select';
 
-const RemoveTaskModal = ({ show, handleRemove, handleRemoveClose, users = [] }) => {
+const RemoveCollaboratorModal = ({ show, handleRemove, handleRemoveClose, users = [] }) => {
     const [selectedUsers, setSelectedUsers] = useState([]);
 
     const handleUserChange = (selectedOptions) => {
@@ -62,4 +62,4 @@ const RemoveTaskModal = ({ show, handleRemove, handleRemoveClose, users = [] }) 
     );
 };
 
-export default RemoveTaskModal;
+export default RemoveCollaboratorModal ;
