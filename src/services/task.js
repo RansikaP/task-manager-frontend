@@ -1,7 +1,8 @@
 import axios from 'axios'
 import Cookies from 'universal-cookie'
 import toast from 'react-hot-toast'
-const baseUrl = 'http://localhost:3000/task/'
+
+const baseUrl = import.meta.env.VITE_BACKEND_URL + 'task/'
 const cookies = new Cookies()
 
 const getMyTasks = async () => {

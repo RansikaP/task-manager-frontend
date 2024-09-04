@@ -76,6 +76,7 @@ function Home(props) {
     const Logout = () => {
         cookies.remove('user')
         cookies.remove('jwt_authorization')
+        cookies.remove('user name')
         setProjectName('')
         setProjectCreator('')
         setProjectTitle('')
