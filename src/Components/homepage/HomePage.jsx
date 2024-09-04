@@ -57,6 +57,7 @@ function Home(props) {
         await projectService.createProject(projectTitle, projectDescription)
         setProjectTitle('')
         setProjectDescription('')
+        setNewProjectKey('')
         reloadSidebar()
     }
 
