@@ -3,7 +3,7 @@ import Cookies from 'universal-cookie'
 import toast from 'react-hot-toast'
 import taskService from './task'
 
-const baseUrl = 'http://localhost:3000/project/'
+const baseUrl = import.meta.env.VITE_BACKEND_URL + 'project/'
 const cookies = new Cookies()
 
 const getMyProjects = async () => {
@@ -66,13 +66,14 @@ const leaveProject = async (collab, projId) => {
     }
 }
 
-const createProject = async (title, desc) => {
+const createProject = async (title, desc, key) => {
     const username = cookies.get('user')
     const requestUrl = baseUrl
     const newProjectObj = {
         name: title,
         creator: username,
         description: desc,
+        key: key,
     }
     try {
         const response = await axios.post(requestUrl, newProjectObj)
